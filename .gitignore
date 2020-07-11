@@ -1,0 +1,8 @@
+/node_modules
+/.aws-sam
+.env.*
+!.env.development
+!.env.test
+__diff_output__
+log/*.log
+package-lock.json

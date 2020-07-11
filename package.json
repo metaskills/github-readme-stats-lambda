@@ -1,0 +1,16 @@
+{
+  "name": "github-readme-stats",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Anurag Hazra",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "jest": "^26.1.0",
+    "jest-environment-node": "^26.1.0",
+    "prettier": "^1.18.2"
+  }
+}

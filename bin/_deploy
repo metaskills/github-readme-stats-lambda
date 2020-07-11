@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+
+if [ -z ${CLOUDFORMATION_BUCKET+x} ]; then
+  echo "Missing CLOUDFORMATION_BUCKET env variable!"
+  exit 126
+fi
+
+./bin/build
+
+sam package \
+  --region ${AWS_DEFAULT_REGION} \
+  --template-file ./.aws-sam/build/template.yaml \
+  --output-template-file ./.aws-sam/build/packaged.yaml \
+  --s3-bucket "${CLOUDFORMATION_BUCKET}" \
+  --s3-prefix "github-readme-stats"
+
+sam deploy \
+  --region ${AWS_DEFAULT_REGION} \
+  --template-file ./.aws-sam/build/packaged.yaml \
+  --stack-name "github-readme-stats" \
+  --capabilities "CAPABILITY_IAM" \
+  --tags \
+    "env=prod" \
+    "group=shared" \
+    "application=github-readme-stats" \
+  --parameter-overrides \
+    GhUser=$GH_USER \
+    GhToken=$GH_TOKEN

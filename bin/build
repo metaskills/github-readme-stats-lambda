@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+# Clean any previous packages/builds.
+rm -rf ./.aws-sam \
+       ./node_modules
+
+# Build SAM
+sam build
+pushd ./.aws-sam/build/Lambda/
+
+# Clean un-needed artifacts.
+rm -rf \
+  .env.development \
+  .env.test \
+  .prettierignore \
+  .prettierrc.js \
+  docker-compose.yml \
+  Dockerfile \
+  jest.config.js \
+  README.md \
+  log \
+  test \
+  tmp
+popd

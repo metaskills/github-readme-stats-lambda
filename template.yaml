@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Github Readme Stats (Lambda)
+
+Parameters:
+
+  GhUser:
+    Type: String
+  GhToken:
+    Type: String
+
+Resources:
+
+  Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: src/index.handler
+      Runtime: nodejs12.x
+      Timeout: 10
+      MemorySize: 128
+      FunctionName: !Sub github-readme-stats
+      Environment:
+        Variables:
+          GH_USER: !Ref GhUser
+          GH_TOKEN: !Ref GhToken
+      Events:
+        HttpApiProxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: prod
+
+Outputs:
+
+  GithubReadmeStatsLambdaArn:
+    Description: Lambda Function Arn
+    Value: !GetAtt Lambda.Arn
+
+  GithubReadmeStatsInfoInvokeUrl:
+    Description: Lambda Invoke URL
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
